@@ -1,5 +1,8 @@
 
-#A setup to utilize Keystone V3, Domains and Horizon based on based on Lorin Hochstein's [devstack-vm][6]. 
+#A setup to utilize Keystone V3, Domains and Horizon based on based on Lorin Hochstein's [devstack-vm][6].
+
+You still need to do the instructions listed on [Symantec's Blog][7] as well as
+Dan Nguyen's Writeup on the [OpenStack Blog][8].
 
 # Neutron-enabled DevStack in a Vagrant VM with Ansible
 
@@ -47,6 +50,8 @@ The easiest way to install the Python packages is with pip:
 [4]: http://devstack.org
 [5]: http://virtualbox.org
 [6]: https://github.com/lorin/devstack-vm
+[7]: http://www.symantec.com/connect/blogs/how-use-horizon-keystone-v3
+[8]: https://wiki.openstack.org/wiki/Horizon/DomainWorkFlow
 
 
 ## Boot the virtual machine and install DevStack
