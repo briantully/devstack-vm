@@ -20,7 +20,6 @@ Vagrant.configure("2") do |config|
         ansible.playbook = "devstack.yaml"
         ansible.verbose = "v"
     end
-    config.vm.provision :shell, :inline => "cd devstack; sudo -u vagrant env HOME=/home/vagrant ./stack.sh"
     config.vm.provision :shell, :inline => "ovs-vsctl add-port br-ex eth2"
 
     # Workaround for https://bugs.launchpad.net/devstack/+bug/1243075
@@ -29,4 +28,8 @@ Vagrant.configure("2") do |config|
         ansible.playbook = "horizon-workaround.yaml"
         ansible.verbose = "v"
     end
+
 end
+
+
+

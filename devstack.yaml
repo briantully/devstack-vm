@@ -9,6 +9,11 @@
     security_groups: False
     tempest: False
     keyring_config_dir: /home/vagrant/.local/share/python_keyring
+    auth_url: http://{{ public_ip }}:5000/v2.0
+    password: stack
+    token: "{{ password }}"
+    memcached:
+      install_development_headers: true
 
   tasks:
     - name: create keyring config directory
@@ -26,7 +31,8 @@
       sudo: True
 
     - name: checkout devstack
-      git: "repo={{ devstack_repo }} dest=/home/vagrant/devstack version={{ version }}"
+      git: "repo={{ devstack_repo }} dest=/home/vagrant/devstack version={{ version }} accept_hostkey=yes"
+
 
     - name: local.conf
       template: src=templates/local.conf.j2 dest=/home/vagrant/devstack/local.conf
@@ -38,3 +44,61 @@
       command: ip link set dev eth2 up
       sudo: True
 
+    # Check that devstack is up.
+    - action: uri url=http://127.0.0.1:80 return_content=yes
+      register: webpage
+      ignore_errors: yes
+
+    - name: boot up devstack
+      command: /home/vagrant/devstack/stack.sh
+      when: webpage|failed
+
+    - name: get admin id
+      shell: mysql -u root -D keystone -e "select id from user where name='admin'" --skip-column-names --silent
+      register: admin_user_id_result
+
+    - name: get admin role id
+      shell: mysql -u root -D keystone -e "select id from role where name='admin'" --skip-column-names --silent
+      register: admin_role_id_result
+
+    - name: Get the default role name
+      shell:  mysql -D keystone -e 'select name from role where name like "%ember";' --skip-column-names --silent
+      register: default_role_result
+
+    - name: add domain role to admin
+      uri: url="http://{{ public_ip }}:5000/v3/domains/default/users/{{ admin_user_id_result.stdout }}/roles/{{ admin_role_id_result.stdout }}" method="PUT" HEADER_X-Auth-Token="{{ token }}" status_code=204
+
+    - name: keystone policy file
+      template: src=templates/v3cloudsample.json.j2 dest=/etc/keystone/policy.json
+
+    # - name: Install memcached server
+    #   apt: pkg=memcached state=installed update-cache=yes
+    #   sudo: True
+    #   tags:
+    #     - packages
+    #
+    # - name: Install header files
+    #   apt: pkg=libmemcached-dev  state=installed update-cache=yes
+    #   sudo: True
+    #   when: memcached.install_development_headers == true
+    #   tags:
+    #     - packages
+    #
+    # - name: Install configuration file
+    #   template: src=templates/memcached.conf.j2 dest=/etc/memcached.conf
+    #   sudo: True
+    #   notify: restart memcached
+    #   tags:
+    #     - configuration
+
+    - debug: msg="admin user = {{admin_user_id_result.stdout}}".
+
+    - debug: msg="admin role = {{admin_role_id_result.stdout}}"
+
+    - debug: msg="default role = {{default_role_result.stdout}}"
+
+    - debug: msg="OPENSTACK_HOST = {{public_ip}}"
+
+  handlers:
+    - name: restart memcached
+      service: name=memcached state=restarted

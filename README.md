@@ -1,3 +1,7 @@
+
+#A setup to utilize Keystone V3, Domains and Horizon based on
+#based on https://github.com/lorin/devstack-vm
+
 # Neutron-enabled DevStack in a Vagrant VM with Ansible
 
 This repository contains a Vagrantfile and an accompanying Ansible playbook
@@ -222,4 +226,3 @@ Finally, access your instance:
 
 The included `boot-cirros.py` file illustrates how to executes all of the
 above commands using the Python bindings.
-
