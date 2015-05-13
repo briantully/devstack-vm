@@ -97,6 +97,9 @@
       notify: restart memcached
       tags:
         - configuration
+    # Example action to restart service httpd, in all cases
+    - name: restart memcached
+      service: name=memcached state=restarted
 
     - debug: msg="admin user = {{admin_user_id_result.stdout}}".
 
