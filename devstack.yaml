@@ -44,13 +44,20 @@
       command: ip link set dev eth2 up
       sudo: True
 
-    # Check that devstack is up.
+    - debug: msg="checking if devstack is running"
+
     - action: uri url=http://127.0.0.1:80 return_content=yes
       register: webpage
       ignore_errors: yes
 
+    - debug: msg="devstack not running"
+      when: webpage|failed
+
     - name: boot up devstack
       command: /home/vagrant/devstack/stack.sh
+      when: webpage|failed
+
+    - debug: msg="booting up devstack"
       when: webpage|failed
 
     - name: get admin id
@@ -71,25 +78,25 @@
     - name: keystone policy file
       template: src=templates/v3cloudsample.json.j2 dest=/etc/keystone/policy.json
 
-    # - name: Install memcached server
-    #   apt: pkg=memcached state=installed update-cache=yes
-    #   sudo: True
-    #   tags:
-    #     - packages
-    #
-    # - name: Install header files
-    #   apt: pkg=libmemcached-dev  state=installed update-cache=yes
-    #   sudo: True
-    #   when: memcached.install_development_headers == true
-    #   tags:
-    #     - packages
-    #
-    # - name: Install configuration file
-    #   template: src=templates/memcached.conf.j2 dest=/etc/memcached.conf
-    #   sudo: True
-    #   notify: restart memcached
-    #   tags:
-    #     - configuration
+    - name: Install memcached server
+      apt: pkg=memcached state=installed update-cache=yes
+      sudo: True
+      tags:
+        - packages
+
+    - name: Install header files
+      apt: pkg=libmemcached-dev  state=installed update-cache=yes
+      sudo: True
+      when: memcached.install_development_headers == true
+      tags:
+        - packages
+
+    - name: Install configuration file
+      template: src=templates/memcached.conf.j2 dest=/etc/memcached.conf
+      sudo: True
+      notify: restart memcached
+      tags:
+        - configuration
 
     - debug: msg="admin user = {{admin_user_id_result.stdout}}".
 
@@ -98,6 +105,16 @@
     - debug: msg="default role = {{default_role_result.stdout}}"
 
     - debug: msg="OPENSTACK_HOST = {{public_ip}}"
+
+    - name: Get ports on bridge br-ex
+      shell: sudo ovs-vsctl list-ports br-ex
+      register: ports_result
+
+
+    - name: Add eth2 to br-ex
+      shell: sudo ovs-vsctl add-port br-ex eth2
+      when: "'eth2' not in ports_result.stdout"
+
 
   handlers:
     - name: restart memcached
