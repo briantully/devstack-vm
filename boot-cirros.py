@@ -24,7 +24,7 @@ from neutronclient.v2_0 import client as neutronclient
 
 auth_url = "http://192.168.27.100:35357/v2.0"
 username = "demo"
-password = "password"
+password = "stack"
 tenant_name = "demo"
 
 neutron = neutronclient.Client(auth_url=auth_url,

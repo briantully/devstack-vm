@@ -147,7 +147,7 @@ To run as the admin user:
 
 * URL: http://192.168.27.100
 * Username: admin or demo
-* Password: password
+* Password: stack
 
 
 ## Initial networking configuration
