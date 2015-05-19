@@ -1,0 +1,16 @@
+---
+- name: apply patch https://review.openstack.org/#/c/180846/
+  hosts: default
+  gather_facts: False
+
+  tasks:
+    - name: fetch the patch
+      git: repo=https://review.openstack.org/openstack/keystone dest=/opt/stack/keystone version=6860f7eb317df4f69d85808e7da92ced72c1b632
+      sudo: True
+      notify:
+        - restart apache
+
+  handlers:
+    - name: restart apache
+      service: name=apache2 state=restarted
+      sudo: True
