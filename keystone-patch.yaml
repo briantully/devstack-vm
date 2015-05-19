@@ -5,7 +5,7 @@
 
   tasks:
     - name: fetch the patch
-      git: repo=https://review.openstack.org/openstack/keystone dest=/opt/stack/keystone version=6860f7eb317df4f69d85808e7da92ced72c1b632
+      git: repo=https://review.openstack.org/openstack/keystone dest=/opt/stack/keystone refspec=refs/changes/46/180846/2 version=6860f7eb317df4f69d85808e7da92ced72c1b632
       sudo: True
       notify:
         - restart apache
