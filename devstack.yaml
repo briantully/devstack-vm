@@ -50,6 +50,9 @@
       register: webpage
       ignore_errors: yes
 
+    - name: keystone policy file
+      template: src=templates/v3cloudsample.json.j2 dest=/etc/keystone/policy.json
+
     - debug: msg="devstack not running"
       when: webpage|failed
 
@@ -75,8 +78,6 @@
     - name: add domain role to admin
       uri: url="http://{{ public_ip }}:5000/v3/domains/default/users/{{ admin_user_id_result.stdout }}/roles/{{ admin_role_id_result.stdout }}" method="PUT" HEADER_X-Auth-Token="{{ token }}" status_code=204
 
-    - name: keystone policy file
-      template: src=templates/v3cloudsample.json.j2 dest=/etc/keystone/policy.json
 
     - name: Install memcached server
       apt: pkg=memcached state=installed update-cache=yes

@@ -6,8 +6,6 @@ Vagrant.configure("2") do |config|
 
     config.vm.box = "trusty64"
     config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
-    #memcached
-    #config.vm.network "forwarded_port", guest: 11211, host: 11211
     # eth1, this will be the endpoint
     config.vm.network :private_network, ip: "192.168.27.100"
     # eth2, this will be the OpenStack "public" network, use DevStack default
@@ -28,6 +26,12 @@ Vagrant.configure("2") do |config|
         ansible.host_key_checking = false
         ansible.playbook = "horizon-workaround.yaml"
         ansible.verbose = "v"
+    end
+
+    config.vm.provision :ansible do |ansible|
+        ansible.host_key_checking = false
+        ansible.playbook = "keystone-patch.yaml"
+        ansible.verbose = "vvv"
     end
 
 end
