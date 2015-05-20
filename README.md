@@ -53,13 +53,14 @@ The easiest way to install the Python packages is with pip:
 [7]: http://www.symantec.com/connect/blogs/how-use-horizon-keystone-v3
 [8]: https://wiki.openstack.org/wiki/Horizon/DomainWorkFlow
 
+## Note: many of the nova commands below wont work because the novaclient is not domains aware.  YMMV
 
 ## Boot the virtual machine and install DevStack
 
 Grab this repo, set the permissions on the vagrant ssh key, and do a `vagrant
 up`, like so:
 
-    git clone https://github.com/lorin/devstack-vm
+    git clone https://github.com/mwhagedorn/devstack-vm
     cd devstack-vm
     chmod 0600 id_vagrant
     vagrant up
