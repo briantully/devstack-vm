@@ -122,6 +122,8 @@
       shell: sudo ovs-vsctl add-port br-ex eth2
       when: "'eth2' not in ports_result.stdout"
 
+    - name: restart memcache
+      service: name=memcached state=restarted
 
   handlers:
     - name: restart memcached
