@@ -62,6 +62,8 @@
 
     - name: keystone policy file
       template: src=templates/v3cloudsample.json.j2 dest=/etc/keystone/policy.json
+      notify:
+        - restart apache
 
 
     - name: get admin id
@@ -124,3 +126,6 @@
   handlers:
     - name: restart memcached
       service: name=memcached state=restarted
+    - name: restart apache
+      service: name=apache2 state=restarted
+      sudo: True
