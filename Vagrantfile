@@ -28,6 +28,7 @@ Vagrant.configure("2") do |config|
         ansible.verbose = "v"
     end
 
+    # Workaround for https://bugs.launchpad.net/keystone/+bug/1437407
     config.vm.provision :ansible do |ansible|
         ansible.host_key_checking = false
         ansible.playbook = "keystone-patch.yaml"
