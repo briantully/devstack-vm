@@ -37,7 +37,7 @@
     "admin_and_matching_target_project_domain_id": "rule:admin_required and domain_id:%(target.project.domain_id)s",
     "admin_and_matching_project_domain_id": "rule:admin_required and domain_id:%(project.domain_id)s",
     "admin_and_matching_target_project_id": "rule:admin_required and project_id:%(target.project.id)s",
-    "identity:get_project": "rule:cloud_admin or rule:admin_and_matching_target_project_domain_id or rule:admin_and_matching_target_project_id", 
+    "identity:get_project": "rule:cloud_admin or rule:admin_and_matching_target_project_domain_id or rule:admin_and_matching_target_project_id",
     "identity:list_projects": "rule:cloud_admin or rule:admin_and_matching_domain_id",
     "identity:list_user_projects": "rule:owner or rule:admin_and_matching_domain_id",
     "identity:create_project": "rule:cloud_admin or rule:admin_and_matching_project_domain_id",
@@ -90,7 +90,7 @@
     "identity:revoke_grant": "rule:cloud_admin or rule:domain_admin_for_grants or rule:project_admin_for_grants",
 
     "admin_on_domain_filter" : "rule:cloud_admin or (rule:admin_required and domain_id:%(scope.domain.id)s)",
-    "admin_on_project_filter" : "rule:cloud_admin or (rule:admin_required and project_id:%(scope.project.id)s)",
+    "admin_on_project_filter" : "rule:cloud_admin or (rule:admin_required and (project_id:%(scope.project.id)s or domain_id:%(target.project.domain_id)s))",
     "identity:list_role_assignments": "rule:admin_on_domain_filter or rule:admin_on_project_filter",
 
     "identity:get_policy": "rule:cloud_admin",
@@ -107,6 +107,7 @@
     "identity:revoke_token": "rule:admin_or_owner",
 
     "identity:create_trust": "user_id:%(trust.trustor_user_id)s",
+    "identity:get_trust": "rule:admin_or_owner",
     "identity:list_trusts": "",
     "identity:list_roles_for_trust": "",
     "identity:get_role_for_trust": "",
@@ -139,7 +140,6 @@
     "identity:list_projects_associated_with_endpoint_group": "rule:admin_required",
     "identity:list_endpoints_associated_with_endpoint_group": "rule:admin_required",
     "identity:get_endpoint_group_in_project": "rule:admin_required",
-    "identity:list_endpoint_groups_for_project": "rule:admin_required",
     "identity:add_endpoint_group_to_project": "rule:admin_required",
     "identity:remove_endpoint_group_from_project": "rule:admin_required",
 
