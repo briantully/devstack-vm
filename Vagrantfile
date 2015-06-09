@@ -18,14 +18,14 @@ Vagrant.configure("2") do |config|
     config.vm.provision :ansible do |ansible|
         ansible.host_key_checking = false
         ansible.playbook = "devstack.yaml"
-        ansible.verbose = "v"
+        ansible.verbose = "vvv"
     end
 
     # Workaround for https://bugs.launchpad.net/devstack/+bug/1243075
     config.vm.provision :ansible do |ansible|
         ansible.host_key_checking = false
         ansible.playbook = "horizon-workaround.yaml"
-        ansible.verbose = "v"
+        ansible.verbose = "vvv"
     end
 
     # Workaround for https://bugs.launchpad.net/keystone/+bug/1437407
